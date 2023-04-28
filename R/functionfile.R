@@ -76,10 +76,10 @@ compare.model <- function(field_data, lims, field_sites, title) {
 # Convert output units to mg/L
 convert.to.mgL <- function(nc_file) {
   conversion_factor_df <- data.frame('Parameter' = c('NIT_amm',
-                                                       'NIT_nit',
-                                                       'PHS_frp',
-                                                       'PHS_frp_ads',
-                                                       'OXY_oxy'),
+                                                     'NIT_nit',
+                                                     'PHS_frp',
+                                                     'PHS_frp_ads',
+                                                     'OXY_oxy'),
                                        'CF' = c(0.1703,
                                                 0.062,
                                                 0.09498,
