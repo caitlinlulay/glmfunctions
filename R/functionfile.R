@@ -72,6 +72,61 @@ compare.model <- function(field_data, lims, field_sites, title) {
 
 }
 
+# Diagnostic Plots
+plot.phyto.limitation <- function(out_file, elev, phyto = "green", date_break = "6 month") {
+  chla <- get_var(out_file, var_name='PHY_tchla', z=elev)
+  p1 <- ggplot(chla, aes(DateTime, PHY_tchla.elv_2.3)) + geom_line() +
+    theme_minimal() + labs(y='Chl-a (ug/L)', x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p2 <- plot_var(nc_file = out_file, var_name = paste0('PHY_',phyto,'_fPho'), reference='bottom') +
+    labs(x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p3 <- plot_var(nc_file = out_file, var_name = paste0('PHY_',phyto,'_fNit'), reference='bottom') +
+    labs(x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p4<- plot_var(nc_file = out_file, var_name = paste0('PHY_',phyto,'_fT'), reference='bottom') +
+    labs(x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p5 <- plot_var(nc_file = out_file, var_name = paste0('PHY_',phyto,'_fI'), reference='bottom') +
+    labs(x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p6 <- p2 + p3 + p4 + p5 + p1 +  plot_layout(ncol=1)
+
+  return(p6)
+}
+
+
+phyto.diagnostics <- function(out_file, elev, date_break = "6 month") {
+  chla <- get_var(out_file, var_name='PHY_tchla', z=elev)
+  p1 <- ggplot(chla, aes(DateTime, PHY_tchla.elv_2.3)) + geom_line() +
+    theme_minimal() + labs(y='Chl-a (ug/L)', x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  frp <- get_var(out_file, var_name='PHS_frp', z=elev, reference='bottom')
+  p2 <- ggplot(frp, aes(DateTime, PHS_frp.elv_2.3)) + geom_line() +
+    theme_minimal() + labs(y='SRP (mmol/m^3)', x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  amm <- get_var(out_file, var_name='NIT_amm', z=elev, reference='bottom')
+  p3 <- ggplot(amm, aes(DateTime, NIT_amm.elv_2.3)) + geom_line() +
+    theme_minimal() + labs(y='Amm (mmol/m^3)', x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  nit <- get_var(out_file, var_name='NIT_nit', z=elev, reference='bottom')
+  p4 <- ggplot(nit, aes(DateTime, NIT_nit.elv_2.3)) + geom_line() +
+    theme_minimal() + labs(y='Nitrate (mmol/m^3)', x="") +
+    scale_x_datetime(date_breaks = date_break, date_labels = "%b-%y", expand=c(0,0))
+
+  p5 <- p2 + p3 + p4 + p1 + plot_layout(ncol=1)
+
+  return(p5)
+}
+
 
 # Convert output units to mg/L
 convert.to.mgL <- function(nc_file) {
